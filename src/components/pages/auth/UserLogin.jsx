@@ -1,28 +1,41 @@
 import { TextField,Button,Box,Alert } from "@mui/material";
 import { useState } from "react";
 import { NavLink , useNavigate } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContexts"; 
+
 
 const UserLogin=()=>{
+    const {login}=useAuth();
+
+
+    const [loading,setLoading]=useState(false);
     const[error,setError]=useState({
         status:false,
         msg:"",
         type:""
     })
     const navigate=useNavigate();
-    const handleSubmit=(e)=>{
+    const handleSubmit=async(e)=>{
         e.preventDefault();
         const data = new FormData(e.currentTarget);
         const actualData={
-            email:data.get('email'),
-           
+            email:data.get('email'),    
             password:data.get('password')
         }
         if(actualData.email && actualData.password){
             console.log(actualData);
             document.getElementById('login-form').reset();
-            setError({status:true,msg:"Login Success",type:"success"});
-            localStorage.setItem('name',actualData.email);
-            navigate('/dashboard');
+            try{
+                setLoading(true);
+                await login(actualData.email,actualData.password);
+                setError({status:true,msg:"Login Success",type:"success"});
+                setTimeout(()=>{
+                    navigate('/dashboard');},3000);
+            }
+            catch{
+                setError({status:true,msg:"Failed to login",type:"error"});
+            }
+            setLoading(false);
         }
         else{
             console.log("All Fields are required!");

@@ -1,5 +1,6 @@
-import {Grid,TextField,Button,Box,Alert} from '@mui/material';
+import {Grid,TextField,Button,Box,Alert,Link} from '@mui/material';
 import { useState } from "react";
+
 
 
 const SendPasswordReset=()=>{
@@ -32,6 +33,8 @@ const SendPasswordReset=()=>{
         <Box textAlign='center' sx={{mt:3 ,mb:2,px:5}}>
             <Button type='submit' variant="contained"> Send </Button>
         </Box>
+        <Box textAlign='center' sx={{mt:3,mb:2,px:5}} ><Link to="/login" color="primary">Login</Link></Box>
+        
         {error.status?<Alert severity={error.type}>{error.msg}</Alert>:""}
     </Box>
         </Grid>

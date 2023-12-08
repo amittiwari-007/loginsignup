@@ -1,5 +1,8 @@
 import React,{useState,useRef,useEffect} from 'react';
 import '../../components/Cards.css';
+import { connect } from 'react-redux';
+import {removeFromList, addToList, editInList} from "../../contexts/actions"
+
 const Cards =(props)=>{
     const Ref=useRef(null);
     const [editItem,setEditItem]=useState();
@@ -21,37 +24,33 @@ const Cards =(props)=>{
     }
     const ClickHandler=()=>{
         setEdit(false);
-        props.setList((prev)=>{
-            return prev.map((value,index)=>{
-                if(index===props.index){
-                    return editItem;
-                }
-                else{
-                    return value;
-                }
-            })
-        })
+        props.editInList(editItem,props.index)
     }
     const DeleteHandler=()=>{
-        props.setList((prev)=>{
-            return prev.filter((element,index)=>{
-                if(index===props.index){
-                    return false;
-                }
-                return true;
-            })
-        })
+        props.removeFromList(props.index)
     }
     return (
         <div className='container'>
             {edit ? <input ref={Ref} onChange={ChangeHandler} value={editItem}></input> : <div className='tasks'>{props.text}</div>}
             
             <div className='buttons'>
-                {edit ? <button onClick={ClickHandler} className='shadow-xl rounded-md w-24'>Save</button>:<button onClick={editBehaviour} className='shadow-xl rounded-md w-24'>Edit</button>}
-                <button onClick={DeleteHandler} className='shadow-xl rounded-md w-24'>Delete</button>
+                {edit ? <div onClick={ClickHandler} className='card-button shadow-xl rounded-md w-24'>Save</div>:<div onClick={editBehaviour} className='card-button shadow-xl rounded-md w-24'>Edit</div>}
+                <div onClick={DeleteHandler} className='card-button shadow-xl rounded-md w-24'>Delete</div>
             </div>
         </div>
     )
 }
 
-export default Cards;
+
+const mapStateToProps = (state) => ({
+    list: state.TodoReducer.list,
+  });
+  
+  const mapDispatchToProps = (dispatch) => ({
+    addToList: (item) => dispatch(addToList(item)),
+    removeFromList: (index) => dispatch(removeFromList(index)),
+    editInList:(item,index) =>dispatch(editInList(item,index))
+  });
+  
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cards);

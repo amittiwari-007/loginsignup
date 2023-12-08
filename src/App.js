@@ -4,11 +4,18 @@ import Home from "./components/pages/Home";
 import Contact from "./components/pages/Contact";
 import Login from "./components/pages/auth/Login";
 import SendPasswordReset from "./components/pages/auth/SendPasswordReset";
-import DashBoard from "./components/pages/auth/DashBoard";
+import PreDashBoard from "./components/pages/auth/PreDashBoard";
+import { AuthProvider } from "./contexts/AuthContexts";
+import UpdateProfile from "./components/pages/auth/UpdateProfile";
+import { connect } from 'react-redux';
 
-function App() {
+import {removeFromList, addToList} from "./contexts/actions"
+
+function App({list}) {
+  console.log(list)
   return (
     <>
+    <AuthProvider>
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout/>}>
@@ -16,12 +23,25 @@ function App() {
           <Route path="contact" element={<Contact/>}></Route>
           <Route path="login" element={<Login/>}></Route>
           <Route path="resetpassword" element={<SendPasswordReset/>}></Route>
+          <Route path="login" element={<Login/>}></Route>
         </Route>
-        <Route path="/dashboard" element={<DashBoard/>}></Route>
+        <Route path="/dashboard" element={<PreDashBoard/>}></Route>
+        <Route path="/update-profile" element={<UpdateProfile/>}></Route>
       </Routes>
       </BrowserRouter>
+      </AuthProvider>
+
     </>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  list: state.TodoReducer.list,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  addToList: () => dispatch(addToList()),
+  removeFromList: () => dispatch(removeFromList()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -1,5 +1,7 @@
 import React,{useState} from 'react';
 import './FormHandler.css';
+import { connect } from 'react-redux';
+import {removeFromList, addToList} from "../contexts/actions"
 
 const FormHandler=(props)=>{
     const [item,setItem]=useState('');
@@ -9,10 +11,8 @@ const FormHandler=(props)=>{
     }
     const ClickHandler=()=>{
         if(item.length>0){
-            props.setList((prev)=>{
-            setItem('');
-            return [...prev,item];
-        })}
+            props.addToList(item)
+        }
     }
 return (
     <>
@@ -26,4 +26,15 @@ return (
 );
 }
 
-export default FormHandler;
+
+const mapStateToProps = (state) => ({
+    list: state.TodoReducer.list,
+  });
+  
+  const mapDispatchToProps = (dispatch) => ({
+    addToList: (item) => dispatch(addToList(item)),
+    removeFromList: (index) => dispatch(removeFromList(index)),
+  });
+  
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormHandler);

@@ -1,25 +1,35 @@
-import {Button,CssBaseline,Grid,Typography} from '@mui/material';
-import { useNavigate } from 'react-router';
+import React ,{useState} from 'react';
+import { Card , Button , Alert } from 'react-bootstrap';
+import { useAuth } from '../../../contexts/AuthContexts';
+import {Link,useNavigate} from 'react-router-dom';
 
-const DashBoard=()=>{
-    const navigate=useNavigate();
-    const handleLogout=()=>{
-        console.log("LoggedOut Successfully");
-        navigate('/login');
+export default function DashBoard(){
+    const [error , setError] = useState('');
+    const {currentUser,logout}= useAuth();
+    const navigate = useNavigate();
+
+    async function handleLogout(){
+        setError('');
+        try{
+            await logout();
+            navigate('/login');
+        }
+        catch{
+            setError('Failed to Log out')
+        }
     }
-    return <>
-    <CssBaseline/>
-    <Grid>
-        <h1>DashBoard</h1>
-        <Grid item sm={2} sx={{backgroundColor:'gray',p:5,color:'white'}}>
-            <Typography variant='h5'>Email:{localStorage.getItem('email')}</Typography>
-            <Typography variant='h6'>Name:{localStorage.getItem('name')}</Typography>
-            <Button variant='contained' color='warning' size='large' onClick={handleLogout} sx={{mt:8}}>LogOut</Button>
-        </Grid>
-        <Grid item sm={8}>
 
-        </Grid>
-    </Grid>
-    </>
+    return (
+        <>
+        <Card>
+            <Card.Body>
+                <h2 className='text-center mb-4'>Profile</h2>
+                {error && <Alert variant='danger'>{error}</Alert>}
+                <strong>Email:</strong>{currentUser.email}
+                <Link to="/update-profile" className='btn btn-primary w-100 mt-3'>Update Profile</Link>
+            </Card.Body>
+        </Card>
+        <div className='w-100 text-center mt-2'><Button variant='link' onClick={handleLogout}>Log Out</Button></div>
+        </>
+    )
 }
-export default DashBoard;

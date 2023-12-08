@@ -6,10 +6,18 @@
     margin: auto;
     padding: 20px;
 }
-button{
+.card-button{
     color: white;
-    background-color: rgb(119, 114, 114);
-    padding: 7px;
+    background-color: rgb(6, 6, 6);
+    border-color: black;
+    width:100px;
+    border-radius: 5px;
+    padding: 8px;
     /* border: 1px solid rgb(233, 226, 226); */
-    margin: 8px;
+    margin-left: 8px;
+    text-align: center;
+}
+
+.buttons{
+    display: flex;
 }
